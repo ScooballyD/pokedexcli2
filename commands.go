@@ -104,3 +104,39 @@ func cmdCatch(cfg *config, in ...string) error {
 	cfg.library[pokemon.Name] = pokemon
 	return nil
 }
+
+func cmdInspect(cfg *config, in ...string) error {
+	if len(in) == 0 {
+		fmt.Println("\nNo pokemon name input\n ")
+		return nil
+	}
+
+	name := in[0]
+	pokemon, exist := cfg.library[name]
+	if !exist {
+		fmt.Println("You have not caught a ", name)
+		return nil
+	}
+	fmt.Printf(
+		"Name: %v\nHeight: %v\nWeight: %v\nStats:\n",
+		pokemon.Name, pokemon.Height, pokemon.Weight,
+	)
+
+	for _, stat := range pokemon.Stats {
+		fmt.Printf(" -%v: %v\n", stat.Stat.Name, stat.BaseStat)
+	}
+
+	fmt.Println("Types:")
+	for _, t := range pokemon.Types {
+		fmt.Printf(" - %v\n", t.Type.Name)
+	}
+	return nil
+}
+
+func cmdPokedex(cfg *config, in ...string) error {
+	fmt.Println("Your pokedex:")
+	for _, poke := range cfg.library {
+		fmt.Printf(" - %v\n", poke.Name)
+	}
+	return nil
+}
