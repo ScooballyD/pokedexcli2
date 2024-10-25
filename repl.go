@@ -15,37 +15,46 @@ func startRepl(cfg *config) {
 		fmt.Print("Pokedex > ")
 		scanner.Scan()
 
-		key := cleanInput(scanner.Text())
-		if len(key) == 0 {
+		keys := cleanInput(scanner.Text())
+		if len(keys) == 0 {
 			continue
 		}
 
-		command, exist := getCommands()[key]
+		mainKey := keys[0]
+
+		in := []string{}
+		if len(keys) > 1 {
+			in = keys[1:]
+		}
+
+		command, exist := getCommands()[mainKey]
 		if exist {
-			command.callback(cfg)
+			command.callback(cfg, in...)
 		} else {
-			fmt.Println("Command Unkown: ", key)
+			fmt.Println("Command Unkown: ", mainKey)
 		}
 
 	}
 }
 
-func cleanInput(text string) string {
+func cleanInput(text string) []string {
 	output := strings.TrimSpace(text)
 	output = strings.ToLower(output)
-	return output
+	outputs := strings.Fields(output)
+	return outputs
 }
 
 type config struct {
 	pokeClient   pokeapi.Client
 	nextLocation *string
 	prevLocation *string
+	library      map[string]pokeapi.Pokemon
 }
 
 type clicommand struct {
 	name       string
 	desciption string
-	callback   func(*config) error
+	callback   func(*config, ...string) error
 }
 
 func getCommands() map[string]clicommand {
@@ -69,6 +78,16 @@ func getCommands() map[string]clicommand {
 			name:       "mapb",
 			desciption: "Get previous page of locations",
 			callback:   cmdMapb,
+		},
+		"explore": {
+			name:       "explore 'location'",
+			desciption: "Lists pokemon found in input area",
+			callback:   cmdExplore,
+		},
+		"catch": {
+			name:       "catch 'pokemon name'",
+			desciption: "Catches input pokemon name",
+			callback:   cmdCatch,
 		},
 	}
 }

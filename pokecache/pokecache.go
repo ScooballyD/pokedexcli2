@@ -32,6 +32,7 @@ func (c Cache) Add(key string, value []byte) {
 		createdAt: time.Now().UTC(),
 		val:       value,
 	}
+	//fmt.Println("=======\nAdded to cache\n=======") //test
 }
 
 func (c Cache) Get(key string) ([]byte, bool) {

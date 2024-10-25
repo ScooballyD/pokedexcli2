@@ -10,6 +10,15 @@ type LocationAreas struct {
 	} `json:"results"`
 }
 
+type Location struct {
+	PokemonEncounters []struct {
+		Pokemon struct {
+			Name string `json:"name"`
+			Url  string `json:"url"`
+		} `json:"pokemon"`
+	} `json:"pokemon_encounters"`
+}
+
 const (
 	baseURL = "https://pokeapi.co/api/v2"
 )

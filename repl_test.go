@@ -7,19 +7,19 @@ import (
 func TestCleanInput(t *testing.T) {
 	cases := []struct {
 		input    string
-		expected string
+		expected []string
 	}{
 		{
 			input:    "   ",
-			expected: "",
+			expected: []string{},
 		},
 		{
 			input:    "  hello  ",
-			expected: "hello",
+			expected: []string{"hello"},
 		},
 		{
 			input:    "  HeLlo  ",
-			expected: "hello",
+			expected: []string{"hello"},
 		},
 	}
 
@@ -29,8 +29,12 @@ func TestCleanInput(t *testing.T) {
 			t.Errorf("lengths don't match: '%v vs %v'", actual, c.expected)
 			continue
 		}
-		if actual != c.expected {
-			t.Errorf("cleanInput(%v) == %v, expected %v", c.input, actual, c.expected)
+		for i := range actual {
+			word := actual[i]
+			expectedWord := c.expected[i]
+			if word != expectedWord {
+				t.Errorf("cleanInput(%v) == %v, expected %v", c.input, actual, c.expected)
+			}
 		}
 	}
 }
